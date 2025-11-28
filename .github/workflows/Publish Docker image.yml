@@ -10,7 +10,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/v2bx
 
 jobs:
   build:
@@ -22,6 +21,9 @@ jobs:
           - linux/amd64
           - linux/arm64
     steps:
+      - name: Set image name
+        run: echo "IMAGE_NAME=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/v2bx" >> $GITHUB_ENV
+
       - name: Prepare
         run: |
           platform=${{ matrix.platform }}
@@ -76,6 +78,9 @@ jobs:
     needs:
       - build
     steps:
+      - name: Set image name
+        run: echo "IMAGE_NAME=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/v2bx" >> $GITHUB_ENV
+
       - name: Download digests
         uses: actions/download-artifact@v4
         with:
